@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>coda-cli — Open-source CLI for the Coda API</title>
+  <meta name="description" content="coda-cli is a fast, open-source command-line tool for interacting with Coda docs, pages, tables, and rows from your terminal." />
+  <meta name="keywords" content="coda, coda.io, cli, command line, api, docs, tables, rows, open source, golang" />
+  <meta name="author" content="AfeefRazick" />
+  <link rel="canonical" href="https://afeefrazick.github.io/coda-cli/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="coda-cli — Open-source CLI for the Coda API" />
+  <meta property="og:description" content="A fast, open-source command-line tool for interacting with Coda docs, pages, tables, and rows from your terminal." />
+  <meta property="og:url" content="https://afeefrazick.github.io/coda-cli/" />
+  <meta property="og:site_name" content="coda-cli" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="coda-cli — Open-source CLI for the Coda API" />
+  <meta name="twitter:description" content="A fast, open-source command-line tool for interacting with Coda docs, pages, tables, and rows from your terminal." />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "coda-cli",
+    "description": "Open-source command-line tool for interacting with the Coda API",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "macOS, Linux, Windows",
+    "url": "https://github.com/AfeefRazick/coda-cli",
+    "license": "https://github.com/AfeefRazick/coda-cli/blob/main/LICENSE",
+    "programmingLanguage": "Go",
+    "author": {
+      "@type": "Person",
+      "name": "AfeefRazick",
+      "url": "https://github.com/AfeefRazick"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo">coda-cli</a>
+      <nav class="nav-links">
+        <a href="#install">Install</a>
+        <a href="#commands">Commands</a>
+        <a href="#examples">Examples</a>
+        <a href="https://github.com/AfeefRazick/coda-cli" target="_blank" rel="noopener" class="nav-github">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="GitHub"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="badge">Open Source</div>
+      <h1>The CLI for Coda</h1>
+      <p class="hero-sub">Read and write Coda docs, pages, tables, and rows — directly from your terminal. Built in Go, works everywhere.</p>
+      <div class="install-block">
+        <code id="install-cmd">go install github.com/AfeefRazick/coda-cli/cmd/coda@latest</code>
+        <button class="copy-btn" onclick="copyInstall()" aria-label="Copy install command">
+          <svg id="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <svg id="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+      <div class="hero-actions">
+        <a href="https://github.com/AfeefRazick/coda-cli/releases" target="_blank" rel="noopener" class="btn btn-primary">Download binary</a>
+        <a href="https://github.com/AfeefRazick/coda-cli" target="_blank" rel="noopener" class="btn btn-outline">View on GitHub</a>
+      </div>
+      <p class="hero-note">Not affiliated with or endorsed by Coda.io, Inc.</p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="install">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Fast</h3>
+          <p>Single compiled binary. No runtime, no dependencies. Starts instantly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>Secure auth</h3>
+          <p>Token stored at <code>~/.config/coda-cli/config.yaml</code> with 0600 permissions. Override anytime with <code>CODA_API_TOKEN</code>.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3>Full CRUD</h3>
+          <p>Docs, pages, tables, columns, and rows. Insert, upsert, update, delete — with async wait support.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔌</div>
+          <h3>Raw API access</h3>
+          <p>Escape hatch via <code>coda api &lt;path&gt;</code> for any endpoint not yet covered by a dedicated command.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Cross-platform</h3>
+          <p>Pre-built binaries for macOS, Linux, and Windows on amd64 and arm64.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>Pagination built-in</h3>
+          <p>Use <code>--all</code> to fetch every page automatically. Or handle pagination manually with <code>--page-token</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMANDS -->
+  <section class="commands-section" id="commands">
+    <div class="container">
+      <h2 class="section-title">Commands</h2>
+      <p class="section-sub">Every resource in the Coda API has a matching command group.</p>
+      <div class="commands-grid">
+
+        <div class="command-group">
+          <h4>auth</h4>
+          <ul>
+            <li><code>coda auth login</code> — save a token</li>
+            <li><code>coda auth status</code> — verify token &amp; show user</li>
+            <li><code>coda auth logout</code> — remove saved token</li>
+          </ul>
+        </div>
+
+        <div class="command-group">
+          <h4>docs</h4>
+          <ul>
+            <li><code>coda docs list</code></li>
+            <li><code>coda docs get &lt;doc&gt;</code></li>
+            <li><code>coda docs create</code></li>
+            <li><code>coda docs update &lt;doc&gt;</code></li>
+            <li><code>coda docs delete &lt;doc&gt;</code></li>
+          </ul>
+        </div>
+
+        <div class="command-group">
+          <h4>pages</h4>
+          <ul>
+            <li><code>coda pages list &lt;doc&gt;</code></li>
+            <li><code>coda pages get &lt;doc&gt; &lt;page&gt;</code></li>
+            <li><code>coda pages content &lt;doc&gt; &lt;page&gt;</code></li>
+            <li><code>coda pages create &lt;doc&gt;</code></li>
+            <li><code>coda pages update &lt;doc&gt; &lt;page&gt;</code></li>
+            <li><code>coda pages delete &lt;doc&gt; &lt;page&gt;</code></li>
+            <li><code>coda pages delete-content &lt;doc&gt; &lt;page&gt;</code></li>
+          </ul>
+        </div>
+
+        <div class="command-group">
+          <h4>tables &amp; columns</h4>
+          <ul>
+            <li><code>coda tables list &lt;doc&gt;</code></li>
+            <li><code>coda tables get &lt;doc&gt; &lt;table&gt;</code></li>
+            <li><code>coda columns list &lt;doc&gt; &lt;table&gt;</code></li>
+            <li><code>coda columns get &lt;doc&gt; &lt;table&gt; &lt;col&gt;</code></li>
+          </ul>
+        </div>
+
+        <div class="command-group">
+          <h4>rows</h4>
+          <ul>
+            <li><code>coda rows list &lt;doc&gt; &lt;table&gt;</code></li>
+            <li><code>coda rows get &lt;doc&gt; &lt;table&gt; &lt;row&gt;</code></li>
+            <li><code>coda rows insert &lt;doc&gt; &lt;table&gt;</code></li>
+            <li><code>coda rows upsert &lt;doc&gt; &lt;table&gt;</code></li>
+            <li><code>coda rows update &lt;doc&gt; &lt;table&gt; &lt;row&gt;</code></li>
+            <li><code>coda rows delete &lt;doc&gt; &lt;table&gt; &lt;row&gt;</code></li>
+            <li><code>coda rows delete-many &lt;doc&gt; &lt;table&gt;</code></li>
+            <li><code>coda rows push-button &lt;doc&gt; &lt;table&gt; &lt;row&gt; &lt;col&gt;</code></li>
+          </ul>
+        </div>
+
+        <div class="command-group">
+          <h4>misc</h4>
+          <ul>
+            <li><code>coda me</code> — show current user</li>
+            <li><code>coda api &lt;path&gt;</code> — raw API call</li>
+            <li><code>coda wait &lt;request-id&gt;</code> — wait for async op</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXAMPLES -->
+  <section class="examples-section" id="examples">
+    <div class="container">
+      <h2 class="section-title">Examples</h2>
+      <p class="section-sub">Common workflows from the command line.</p>
+      <div class="examples-tabs">
+        <div class="tab-list" role="tablist">
+          <button class="tab active" onclick="showTab('auth')" role="tab" aria-selected="true">Auth</button>
+          <button class="tab" onclick="showTab('docs')" role="tab" aria-selected="false">Docs</button>
+          <button class="tab" onclick="showTab('rows')" role="tab" aria-selected="false">Rows</button>
+          <button class="tab" onclick="showTab('api')" role="tab" aria-selected="false">Raw API</button>
+        </div>
+        <div class="tab-content">
+          <pre id="tab-auth" class="code-block active"><span class="c"># Authenticate</span>
+coda auth login
+<span class="c"># or pipe the token directly</span>
+echo $TOKEN | coda auth login --with-token-stdin
+<span class="c"># verify</span>
+coda auth status</pre>
+
+          <pre id="tab-docs" class="code-block"><span class="c"># List all your docs</span>
+coda docs list --all --owned
+
+<span class="c"># Create a doc</span>
+coda docs create --title "Launch Tracker"
+
+<span class="c"># Update title</span>
+coda docs update AbCDeFGH --title "New Title"
+
+<span class="c"># Delete (with confirmation)</span>
+coda docs delete AbCDeFGH --yes</pre>
+
+          <pre id="tab-rows" class="code-block"><span class="c"># List rows</span>
+coda rows list AbCDeFGH grid-pqrs --limit 50
+
+<span class="c"># Insert a row and wait for completion</span>
+coda rows insert AbCDeFGH grid-pqrs \
+  --value Name="Quarterly plan" \
+  --value Status=Draft \
+  --wait
+
+<span class="c"># Upsert by key column</span>
+coda rows upsert AbCDeFGH grid-pqrs \
+  --key Name \
+  --value Name="Q3 plan" \
+  --value Status=Active \
+  --wait
+
+<span class="c"># Delete multiple rows</span>
+coda rows delete-many AbCDeFGH grid-pqrs \
+  --row i-123 --row i-456 --yes --wait</pre>
+
+          <pre id="tab-api" class="code-block"><span class="c"># Call any Coda API endpoint</span>
+coda api /docs --paginate
+
+<span class="c"># PATCH with fields</span>
+coda api /docs/AbCDeFGH \
+  --method PATCH \
+  --field title="New Title"
+
+<span class="c"># Wait for an async mutation</span>
+coda wait some-request-id-here</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section class="install-section">
+    <div class="container install-inner">
+      <h2>Get started in seconds</h2>
+      <p>Download a pre-built binary or install with Go.</p>
+      <div class="install-options">
+        <div class="install-option">
+          <h4>Go install</h4>
+          <div class="code-line">
+            <code>go install github.com/AfeefRazick/coda-cli/cmd/coda@latest</code>
+          </div>
+        </div>
+        <div class="install-option">
+          <h4>Download binary</h4>
+          <p>Pre-built for macOS, Linux, Windows — amd64 &amp; arm64.</p>
+          <a href="https://github.com/AfeefRazick/coda-cli/releases" target="_blank" rel="noopener" class="btn btn-primary">View releases</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="footer-logo">coda-cli</span>
+      <span class="footer-note">Not affiliated with or endorsed by Coda.io, Inc.</span>
+      <a href="https://github.com/AfeefRazick/coda-cli" target="_blank" rel="noopener" class="footer-github">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
