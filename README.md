@@ -14,12 +14,6 @@ An open-source command-line tool for interacting with [Coda](https://coda.io) do
 go install github.com/AfeefRazick/coda-cli/cmd/coda@latest
 ```
 
-### Homebrew (coming soon)
-
-```sh
-brew install AfeefRazick/tap/coda
-```
-
 ### Download binary
 
 Download the latest release from the [releases page](https://github.com/AfeefRazick/coda-cli/releases).
