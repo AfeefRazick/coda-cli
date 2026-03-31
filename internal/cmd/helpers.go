@@ -94,41 +94,41 @@ func (s *stringSliceFlag) Type() string    { return "key=value" }
 // ── flag helpers ─────────────────────────────────────────────────────────────
 
 func addWaitFlags(cmd *cobra.Command) {
-	cmd.Flags().Bool("wait", false, "Wait for async completion")
-	cmd.Flags().Duration("timeout", 2*time.Minute, "Maximum time to wait for completion")
-	cmd.Flags().Duration("interval", 2*time.Second, "Polling interval while waiting")
+	cmd.Flags().Bool("wait", false, "Block until the async mutation completes")
+	cmd.Flags().Duration("timeout", 2*time.Minute, "Maximum time to wait before giving up (requires --wait)")
+	cmd.Flags().Duration("interval", 2*time.Second, "How often to poll mutation status (requires --wait)")
 }
 
 func addConfirmFlag(cmd *cobra.Command) {
-	cmd.Flags().Bool("yes", false, "Skip confirmation prompt")
+	cmd.Flags().Bool("yes", false, "Skip the interactive confirmation prompt")
 }
 
 func addPageCreateFlags(cmd *cobra.Command) {
-	cmd.Flags().String("name", "", "Page name")
-	cmd.Flags().String("subtitle", "", "Page subtitle")
-	cmd.Flags().String("icon", "", "Icon name")
-	cmd.Flags().String("image-url", "", "Cover image URL")
-	cmd.Flags().String("parent-page-id", "", "Parent page ID for subpages")
-	cmd.Flags().String("content", "", "Canvas content for the page")
-	cmd.Flags().String("content-format", "html", "Canvas content format")
-	cmd.Flags().String("embed-url", "", "URL to create an embedded page")
+	cmd.Flags().String("name", "", "Name of the page")
+	cmd.Flags().String("subtitle", "", "Subtitle shown below the page name")
+	cmd.Flags().String("icon", "", "Icon name for the page")
+	cmd.Flags().String("image-url", "", "URL of the page cover image")
+	cmd.Flags().String("parent-page-id", "", "ID of the parent page (creates a subpage)")
+	cmd.Flags().String("content", "", "Initial canvas content (HTML by default; see --content-format)")
+	cmd.Flags().String("content-format", "html", "Format of --content: html or markdown")
+	cmd.Flags().String("embed-url", "", "URL to embed as the page content (cannot be combined with --content)")
 }
 
 func addPageUpdateFlags(cmd *cobra.Command) {
-	cmd.Flags().String("name", "", "Page name")
-	cmd.Flags().String("subtitle", "", "Page subtitle")
-	cmd.Flags().String("icon", "", "Icon name")
-	cmd.Flags().String("image-url", "", "Cover image URL")
-	cmd.Flags().Bool("hidden", false, "Hide the page")
-	cmd.Flags().String("content", "", "Canvas content update")
-	cmd.Flags().String("content-format", "html", "Canvas content format")
-	cmd.Flags().String("insertion-mode", "replace", "Content insertion mode: append, prepend, replace")
-	cmd.Flags().String("element-id", "", "Page element ID used as the insertion reference")
+	cmd.Flags().String("name", "", "New name for the page")
+	cmd.Flags().String("subtitle", "", "New subtitle for the page")
+	cmd.Flags().String("icon", "", "New icon name for the page")
+	cmd.Flags().String("image-url", "", "New cover image URL")
+	cmd.Flags().Bool("hidden", false, "Hide the page from the doc navigation")
+	cmd.Flags().String("content", "", "Canvas content to write (see --insertion-mode and --content-format)")
+	cmd.Flags().String("content-format", "html", "Format of --content: html or markdown")
+	cmd.Flags().String("insertion-mode", "replace", "How content is written: replace, append, or prepend")
+	cmd.Flags().String("element-id", "", "Page element ID to use as the insertion reference point")
 }
 
 func addRowEditFlags(cmd *cobra.Command) {
-	cmd.Flags().StringArray("value", nil, "Cell edit in the form column=value (repeatable)")
-	cmd.Flags().Bool("disable-parsing", false, "Treat values as literal strings")
+	cmd.Flags().StringArray("value", nil, "Cell value as column=value (repeatable); numbers/booleans/JSON are parsed automatically")
+	cmd.Flags().Bool("disable-parsing", false, "Treat all --value values as literal strings, skipping type inference")
 }
 
 // ── query / payload builders ─────────────────────────────────────────────────

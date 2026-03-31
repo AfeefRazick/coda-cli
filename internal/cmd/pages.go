@@ -10,12 +10,24 @@ import (
 )
 
 func newPagesCommand() *cobra.Command {
-	cmd := &cobra.Command{Use: "pages", Short: "Manage Coda pages"}
+	cmd := &cobra.Command{
+		Use:   "pages",
+		Short: "Manage Coda pages",
+		Long:  "List, get, create, update, and delete pages within a Coda document.",
+	}
 
 	listCmd := &cobra.Command{
 		Use:   "list <doc>",
 		Short: "List pages in a doc",
-		Args:  cobra.ExactArgs(1),
+		Long: `List all pages in a Coda document.
+
+Results are printed as a table by default. Use --json for raw API output.
+Use --all to automatically paginate and return every page.`,
+		Args: exactArgsFor("coda pages list <doc>", 1),
+		Example: strings.Join([]string{
+			"  coda pages list AbCDeFGH",
+			"  coda pages list AbCDeFGH --all --json",
+		}, "\n"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			client, _, err := api.NewClient()
 			if err != nil {
@@ -47,15 +59,16 @@ func newPagesCommand() *cobra.Command {
 			return printPageTableFromBody(body)
 		},
 	}
-	listCmd.Flags().Int("limit", 25, "Maximum number of pages to request")
-	listCmd.Flags().String("page-token", "", "Pagination token")
-	listCmd.Flags().Bool("all", false, "Fetch all pages")
-	listCmd.Flags().Bool("json", false, "Print raw JSON")
+	listCmd.Flags().Int("limit", 25, "Number of pages to return per page (max 25)")
+	listCmd.Flags().String("page-token", "", "Token to fetch the next page of results")
+	listCmd.Flags().Bool("all", false, "Fetch all pages and return every result")
+	listCmd.Flags().Bool("json", false, "Print raw JSON instead of a table")
 	cmd.AddCommand(listCmd)
 
 	cmd.AddCommand(&cobra.Command{
 		Use:     "get <doc> <page>",
 		Short:   "Get a page",
+		Long:    "Print the full metadata for a single page as JSON.",
 		Args:    exactArgsFor("coda pages get <doc> <page>", 2),
 		Example: "  coda pages get AbCDeFGH canvas-tuVwxYz",
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -66,7 +79,12 @@ func newPagesCommand() *cobra.Command {
 	contentCmd := &cobra.Command{
 		Use:   "content <doc> <page>",
 		Short: "Read page content",
+		Long:  "Export the content of a Coda page in the specified format.",
 		Args:  exactArgsFor("coda pages content <doc> <page>", 2),
+		Example: strings.Join([]string{
+			"  coda pages content AbCDeFGH canvas-tuVwxYz",
+			"  coda pages content AbCDeFGH canvas-tuVwxYz --format markdown",
+		}, "\n"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			client, _, err := api.NewClient()
 			if err != nil {
@@ -83,17 +101,23 @@ func newPagesCommand() *cobra.Command {
 			return printJSON(body)
 		},
 	}
-	contentCmd.Flags().Int("limit", 25, "Maximum number of content items to request")
-	contentCmd.Flags().String("page-token", "", "Pagination token")
-	contentCmd.Flags().String("format", "plainText", "Content format")
+	contentCmd.Flags().Int("limit", 25, "Number of content items to return per page")
+	contentCmd.Flags().String("page-token", "", "Token to fetch the next page of content")
+	contentCmd.Flags().String("format", "plainText", "Content export format: plainText, markdown, html")
 	cmd.AddCommand(contentCmd)
 
 	createCmd := &cobra.Command{
 		Use:   "create <doc>",
 		Short: "Create a page",
-		Args:  exactArgsFor("coda pages create <doc>", 1),
+		Long: `Create a new page in a Coda document.
+
+At least one of --name, --content, or --embed-url must be provided
+unless --input is used. Use --wait to block until the page is created.`,
+		Args: exactArgsFor("coda pages create <doc>", 1),
 		Example: strings.Join([]string{
+			"  coda pages create AbCDeFGH --name Roadmap",
 			"  coda pages create AbCDeFGH --name Roadmap --content '<p>Hello</p>' --wait",
+			"  coda pages create AbCDeFGH --name Embed --embed-url https://example.com",
 			"  coda pages create AbCDeFGH --input page-create.json",
 		}, "\n"),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -112,7 +136,7 @@ func newPagesCommand() *cobra.Command {
 			return maybeWaitAndPrint(cmd, client, body)
 		},
 	}
-	createCmd.Flags().String("input", "", "Path to a JSON request body")
+	createCmd.Flags().String("input", "", "Path to a JSON request body (uses Coda API schema directly)")
 	addPageCreateFlags(createCmd)
 	addWaitFlags(createCmd)
 	cmd.AddCommand(createCmd)
@@ -120,9 +144,15 @@ func newPagesCommand() *cobra.Command {
 	updateCmd := &cobra.Command{
 		Use:   "update <doc> <page>",
 		Short: "Update a page",
-		Args:  exactArgsFor("coda pages update <doc> <page>", 2),
+		Long: `Update the name, subtitle, or content of a Coda page.
+
+At least one flag must be provided unless --input is used. Use --wait
+to block until the update mutation completes.`,
+		Args: exactArgsFor("coda pages update <doc> <page>", 2),
 		Example: strings.Join([]string{
-			"  coda pages update AbCDeFGH canvas-tuVwxYz --name Roadmap --wait",
+			"  coda pages update AbCDeFGH canvas-tuVwxYz --name \"New Name\"",
+			"  coda pages update AbCDeFGH canvas-tuVwxYz --content '<p>Updated</p>' --wait",
+			"  coda pages update AbCDeFGH canvas-tuVwxYz --hidden",
 			"  coda pages update AbCDeFGH canvas-tuVwxYz --input page-update.json",
 		}, "\n"),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -141,14 +171,18 @@ func newPagesCommand() *cobra.Command {
 			return maybeWaitAndPrint(cmd, client, body)
 		},
 	}
-	updateCmd.Flags().String("input", "", "Path to a JSON request body")
+	updateCmd.Flags().String("input", "", "Path to a JSON request body (uses Coda API schema directly)")
 	addPageUpdateFlags(updateCmd)
 	addWaitFlags(updateCmd)
 	cmd.AddCommand(updateCmd)
 
 	deleteCmd := &cobra.Command{
-		Use:     "delete <doc> <page>",
-		Short:   "Delete a page",
+		Use:   "delete <doc> <page>",
+		Short: "Delete a page",
+		Long: `Permanently delete a page from a Coda document.
+
+Prompts for confirmation unless --yes is provided. Use --wait to block
+until the deletion mutation completes.`,
 		Args:    exactArgsFor("coda pages delete <doc> <page>", 2),
 		Example: "  coda pages delete AbCDeFGH canvas-tuVwxYz --yes --wait",
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -162,10 +196,16 @@ func newPagesCommand() *cobra.Command {
 	deleteContentCmd := &cobra.Command{
 		Use:   "delete-content <doc> <page>",
 		Short: "Delete page content",
-		Args:  exactArgsFor("coda pages delete-content <doc> <page>", 2),
+		Long: `Delete all content or specific elements from a Coda page.
+
+Without --element-id, deletes all content on the page. With one or more
+--element-id flags, only those elements are removed. Prompts for
+confirmation unless --yes is provided.`,
+		Args: exactArgsFor("coda pages delete-content <doc> <page>", 2),
 		Example: strings.Join([]string{
-			"  coda pages delete-content AbCDeFGH canvas-tuVwxYz --yes --wait",
+			"  coda pages delete-content AbCDeFGH canvas-tuVwxYz --yes",
 			"  coda pages delete-content AbCDeFGH canvas-tuVwxYz --element-id cl-123 --element-id cl-456 --yes",
+			"  coda pages delete-content AbCDeFGH canvas-tuVwxYz --input delete-content.json --yes",
 		}, "\n"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := confirmDestructive(cmd, "page content", args[1]); err != nil {
@@ -192,8 +232,8 @@ func newPagesCommand() *cobra.Command {
 			return maybeWaitAndPrint(cmd, client, body)
 		},
 	}
-	deleteContentCmd.Flags().String("input", "", "Path to a JSON request body")
-	deleteContentCmd.Flags().StringArray("element-id", nil, "Page element ID to delete (repeatable)")
+	deleteContentCmd.Flags().String("input", "", "Path to a JSON request body (uses Coda API schema directly)")
+	deleteContentCmd.Flags().StringArray("element-id", nil, "ID of a page element to delete (repeatable; omit to delete all content)")
 	addConfirmFlag(deleteContentCmd)
 	addWaitFlags(deleteContentCmd)
 	cmd.AddCommand(deleteContentCmd)

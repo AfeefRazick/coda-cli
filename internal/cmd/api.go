@@ -18,11 +18,22 @@ func newAPICommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "api <path>",
 		Short: "Call a raw Coda API endpoint",
-		Args:  exactArgsFor("coda api <path>", 1),
+		Long: `Send a request to any Coda REST API endpoint and print the response as JSON.
+
+This is an escape hatch for endpoints not yet covered by a dedicated command.
+Paths are relative to https://coda.io/apis/v1 (e.g. /docs, /whoami).
+Absolute URLs are also accepted.
+
+Use --field key=value to build a JSON request body, or --input to pass a
+JSON file. Use --paginate to automatically follow nextPageToken on GET
+requests and return all items in a single response.`,
 		Example: strings.Join([]string{
 			"  coda api /docs --paginate",
+			"  coda api /whoami",
 			"  coda api /docs/<doc-id> --method PATCH --field title='New Title'",
+			"  coda api /docs --method POST --input doc-create.json",
 		}, "\n"),
+		Args: exactArgsFor("coda api <path>", 1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			client, _, err := api.NewClient()
 			if err != nil {
@@ -48,7 +59,7 @@ func newAPICommand() *cobra.Command {
 			}
 
 			if verb != http.MethodGet {
-				return errors.New("--paginate only supports GET")
+				return errors.New("--paginate only supports GET requests")
 			}
 
 			items, meta, err := paginateItems(cmd.Context(), client, args[0], nil)
@@ -64,9 +75,9 @@ func newAPICommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Var(&fields, "field", "Add a JSON field as key=value (repeatable)")
-	cmd.Flags().StringVar(&input, "input", "", "Path to a JSON file for the request body")
-	cmd.Flags().StringVar(&method, "method", http.MethodGet, "HTTP method to use")
-	cmd.Flags().BoolVar(&paginate, "paginate", false, "Fetch all pages for list endpoints")
+	cmd.Flags().Var(&fields, "field", "Add a JSON body field as key=value (repeatable); cannot be combined with --input")
+	cmd.Flags().StringVar(&input, "input", "", "Path to a JSON file to use as the request body; cannot be combined with --field")
+	cmd.Flags().StringVar(&method, "method", http.MethodGet, "HTTP method (GET, POST, PUT, PATCH, DELETE)")
+	cmd.Flags().BoolVar(&paginate, "paginate", false, "Follow nextPageToken and return all items (GET only)")
 	return cmd
 }

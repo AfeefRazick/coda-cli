@@ -10,8 +10,10 @@ import (
 
 func newMeCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:   "me",
-		Short: "Show the current Coda user",
+		Use:     "me",
+		Short:   "Show the current Coda user",
+		Long:    "Print the profile of the authenticated Coda user as JSON, including name, login, and token details.",
+		Example: "  coda me",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			client, _, err := api.NewClient()
 			if err != nil {
