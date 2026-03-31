@@ -403,6 +403,68 @@ body {
   color: #52525b;
 }
 
+/* ── CODE COPY BUTTON (injected) ──────────────────────────────────── */
+
+.code-copy-wrap {
+  position: relative;
+}
+
+.code-copy-wrap .code-block,
+.code-copy-wrap .code-line {
+  display: block; /* override tab hide — wrap manages visibility */
+}
+
+.code-copy-wrap .code-block {
+  display: none;
+}
+
+.code-copy-wrap .code-block.active {
+  display: block;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: var(--radius);
+  color: #71717a;
+  cursor: pointer;
+  padding: 5px 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+  z-index: 10;
+}
+
+.code-copy-wrap:hover .code-copy-btn {
+  opacity: 1;
+}
+
+.code-copy-btn:hover,
+.code-copy-btn.copied {
+  color: #e4e4e7;
+}
+
+/* For .code-line wrappers (light background) */
+.code-copy-wrap .code-line ~ .code-copy-btn,
+.code-copy-wrap:has(.code-line) .code-copy-btn {
+  background: #f4f4f5;
+  border-color: var(--border);
+  color: var(--muted);
+  top: 50%;
+  transform: translateY(-50%);
+  right: 8px;
+}
+
+.code-copy-wrap:has(.code-line) .code-copy-btn:hover,
+.code-copy-wrap:has(.code-line) .code-copy-btn.copied {
+  color: var(--fg);
+}
+
 /* ── INSTALL SECTION ──────────────────────────────────────────────── */
 
 .install-section {
