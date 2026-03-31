@@ -4,8 +4,6 @@ An open-source command-line tool for interacting with [Coda](https://coda.io) do
 
 > **Not affiliated with or endorsed by Coda.io, Inc.**
 
-Inspired by [jira-cli](https://github.com/ankitpokhrel/jira-cli) and [gh](https://github.com/cli/cli).
-
 ---
 
 ## Installation
