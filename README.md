@@ -117,6 +117,12 @@ coda wait <request-id>
 
 ---
 
+## Acknowledgements
+
+Heavily inspired by [GitHub CLI](https://github.com/cli/cli) and [jira-cli](https://github.com/ankitpokhrel/jira-cli).
+
+---
+
 ## Contributing
 
 Contributions are welcome. Please open an issue first to discuss significant changes.
