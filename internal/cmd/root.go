@@ -18,6 +18,7 @@ func NewRootCommand() *cobra.Command {
 	cmd.AddCommand(newTablesCommand())
 	cmd.AddCommand(newColumnsCommand())
 	cmd.AddCommand(newRowsCommand())
+	cmd.AddCommand(newExperimentalCommand())
 
 	return cmd
 }

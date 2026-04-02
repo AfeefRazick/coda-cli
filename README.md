@@ -106,6 +106,18 @@ coda api /whoami
 coda wait <request-id>
 ```
 
+### Experimental local search
+
+```sh
+coda experimental index
+coda experimental index --force --json
+coda experimental grep "quarterly plan"
+coda experimental grep "status.*blocked" --ignore-case
+```
+
+The experimental index is stored under your Coda CLI config directory, for example
+`~/.config/coda-cli/experimental/workspace-index` unless `CODA_CONFIG_DIR` is set.
+
 ---
 
 ## Configuration
