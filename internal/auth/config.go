@@ -16,13 +16,13 @@ type AuthConfig struct {
 	APIToken string `yaml:"api_token"`
 }
 
-func ConfigPath() (string, error) {
+func ConfigDir() (string, error) {
 	if dir := os.Getenv(configDirEnvVar); dir != "" {
-		return filepath.Join(dir, "config.yaml"), nil
+		return dir, nil
 	}
 
 	if xdgDir := os.Getenv("XDG_CONFIG_HOME"); xdgDir != "" {
-		return filepath.Join(xdgDir, "coda-cli", "config.yaml"), nil
+		return filepath.Join(xdgDir, "coda-cli"), nil
 	}
 
 	if runtime.GOOS == "windows" {
@@ -30,7 +30,7 @@ func ConfigPath() (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("failed to resolve user config dir: %w", err)
 		}
-		return filepath.Join(configDir, "coda-cli", "config.yaml"), nil
+		return filepath.Join(configDir, "coda-cli"), nil
 	}
 
 	homeDir, err := os.UserHomeDir()
@@ -38,7 +38,15 @@ func ConfigPath() (string, error) {
 		return "", fmt.Errorf("failed to resolve home dir: %w", err)
 	}
 
-	return filepath.Join(homeDir, ".config", "coda-cli", "config.yaml"), nil
+	return filepath.Join(homeDir, ".config", "coda-cli"), nil
+}
+
+func ConfigPath() (string, error) {
+	dir, err := ConfigDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, "config.yaml"), nil
 }
 
 func LoadAuthConfig() (*AuthConfig, error) {
