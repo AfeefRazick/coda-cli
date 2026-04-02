@@ -164,32 +164,74 @@ func newExperimentalCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			jsonOut, _ := cmd.Flags().GetBool("json")
-			if jsonOut {
-				return printJSONMarshal(map[string]any{"matches": matches, "count": len(matches)})
-			}
-			for _, match := range matches {
-				location := match.DocName + " / " + match.PageName
-				if match.ParentName != "" {
-					location += " (parent: " + match.ParentName + ")"
-				}
-				fmt.Printf("%s:%d:%s\n", location, match.Line, match.Text)
-			}
-			if len(matches) == 0 {
-				fmt.Println("No matches found.")
-			}
-			return nil
+			return printExperimentalGrepMatches(cmd, matches)
 		},
 	}
-	grepCmd.Flags().Bool("ignore-case", false, "Match case-insensitively")
-	grepCmd.Flags().Bool("fixed-strings", false, "Treat the pattern as a literal string instead of a regular expression")
-	grepCmd.Flags().String("doc", "", "Only search docs whose name or ID contains this value")
-	grepCmd.Flags().String("page", "", "Only search pages whose name or ID contains this value")
-	grepCmd.Flags().Int("limit", 100, "Maximum number of matches to print")
-	grepCmd.Flags().Bool("json", false, "Print matches as JSON")
+	addExperimentalSearchFlags(grepCmd)
 	cmd.AddCommand(grepCmd)
 
 	return cmd
+}
+
+func newSearchCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "search <pattern>",
+		Short: "Search the local workspace index",
+		Long:  "Search the local workspace index built from Coda docs and pages. Use --refresh to update the index before searching.",
+		Args:  exactArgsFor("coda search <pattern>", 1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			refresh, _ := cmd.Flags().GetBool("refresh")
+			if refresh {
+				client, _, err := api.NewClient()
+				if err != nil {
+					return err
+				}
+				workers, _ := cmd.Flags().GetInt("workers")
+				force, _ := cmd.Flags().GetBool("force-refresh")
+				if _, err := runExperimentalIndex(cmd.Context(), client, workers, force); err != nil {
+					return err
+				}
+			}
+
+			matches, err := runExperimentalGrep(cmd, args[0])
+			if err != nil {
+				return err
+			}
+			return printExperimentalGrepMatches(cmd, matches)
+		},
+	}
+	addExperimentalSearchFlags(cmd)
+	cmd.Flags().Bool("refresh", false, "Refresh the local index before searching")
+	cmd.Flags().Int("workers", 6, "Number of concurrent page-content fetches when --refresh is used")
+	cmd.Flags().Bool("force-refresh", false, "Re-fetch all docs when --refresh is used")
+	return cmd
+}
+
+func addExperimentalSearchFlags(cmd *cobra.Command) {
+	cmd.Flags().Bool("ignore-case", false, "Match case-insensitively")
+	cmd.Flags().Bool("fixed-strings", false, "Treat the pattern as a literal string instead of a regular expression")
+	cmd.Flags().String("doc", "", "Only search docs whose name or ID contains this value")
+	cmd.Flags().String("page", "", "Only search pages whose name or ID contains this value")
+	cmd.Flags().Int("limit", 100, "Maximum number of matches to print")
+	cmd.Flags().Bool("json", false, "Print matches as JSON")
+}
+
+func printExperimentalGrepMatches(cmd *cobra.Command, matches []experimentalGrepMatch) error {
+	jsonOut, _ := cmd.Flags().GetBool("json")
+	if jsonOut {
+		return printJSONMarshal(map[string]any{"matches": matches, "count": len(matches)})
+	}
+	for _, match := range matches {
+		location := match.DocName + " / " + match.PageName
+		if match.ParentName != "" {
+			location += " (parent: " + match.ParentName + ")"
+		}
+		fmt.Printf("%s:%d:%s\n", location, match.Line, match.Text)
+	}
+	if len(matches) == 0 {
+		fmt.Println("No matches found.")
+	}
+	return nil
 }
 
 type experimentalIndexResult struct {
