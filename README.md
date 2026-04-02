@@ -109,6 +109,8 @@ coda wait <request-id>
 ### Experimental local search
 
 ```sh
+coda search "quarterly plan"
+coda search "status.*blocked" --ignore-case --refresh
 coda experimental index
 coda experimental index --force --json
 coda experimental grep "quarterly plan"
